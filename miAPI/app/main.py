@@ -1,35 +1,50 @@
-#Importaciones
-from fastapi import FastAPI
-from typing import Optional
+from fastapi import FastAPI, status, HTTPException
+from typing import Optional 
 import asyncio
 
-
-#Instancia del servidor
 app = FastAPI()
 
-#Endpoints
-@app.get("/")
-async def holamundo():
-    return {"mensaje":"Hola mundo FastAPI"}
+usuarios = [
+    {"id": 1, "nombre": "Santiago", "edad": 21},
+    {"id": 2, "nombre": "Sergio", "edad": 22},
+    {"id": 3, "nombre": "Rodrigo", "edad": 20},
+]
 
-@app.get("/bienvenido")
-async def bienvenido():
-    await asyncio.sleep(5)
-    return {
-        "mensaje":"Bienvenido a FastAPI",
-        "estatus":"200"
-        }
+@app.get("/v1/usuarios/", tags=['HTTP CRUD'])
+async def leer_usuarios():
+    return {"total": len(usuarios), "usuarios": usuarios}
 
-#Endpoint con Parametros obligatorios
-@app.get("/saludo/{nombre}")
-async def saludo(nombre: str):
-    return{"mensdaje": f"Hola, {nombre}. Este es un parametro obligatorio"}
+@app.post("/v1/usuarios/", tags=['HTTP CRUD'], status_code=status.HTTP_201_CREATED)
+async def agregar_usuarios(usuario: dict):
+    if any(usr["id"] == usuario.get("id") for usr in usuarios):
+        raise HTTPException(status_code=400, detail="El id ya existe")
+    
+    usuarios.append(usuario)
+    return {"mensaje": "Usuario Creado", "datos": usuario}
 
-#Endpoint con Parametros opcionales
-@app.get("/busqueda")
-async def buscar(q: Optional[str] = None):
-    if q:
-        return{"resultado" : f"Estas buscando: {q}"}
-    else:
-        return{"resultado" : "No buscaste nada"}
+#NUEVAS RUTAS: PUT, PATCH Y DELETE 
+@app.put("/v1/usuarios/{usuario_id}", tags=['HTTP CRUD'])
+async def actualizar_usuario_completo(usuario_id: int, usuario_actualizado: dict):
+    for indice, usr in enumerate(usuarios):
+        if usr["id"] == usuario_id:
+            usuarios[indice] = usuario_actualizado
+            return {"mensaje": "Usuario actualizado", "datos": usuarios[indice]}
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
+@app.patch("/v1/usuarios/{usuario_id}", tags=['HTTP CRUD'])
+async def actualizar_usuario_parcial(usuario_id: int, datos_parciales: dict):
+    """PATCH: Modifica solo los campos enviados."""
+    for usr in usuarios:
+        if usr["id"] == usuario_id:
+            usr.update(datos_parciales)
+            return {"mensaje": "Usuario actualizado parcialmente", "usuario": usr}
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+@app.delete("/v1/usuarios/{usuario_id}", tags=['HTTP CRUD'])
+async def eliminar_usuario(usuario_id: int):
+    """DELETE: Elimina al usuario de la lista."""
+    for i, usr in enumerate(usuarios):
+        if usr["id"] == usuario_id:
+            usuario_eliminado = usuarios.pop(i)
+            return {"mensaje": "Usuario eliminado", "usuario": usuario_eliminado}
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
