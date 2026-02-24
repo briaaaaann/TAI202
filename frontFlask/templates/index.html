@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Gestión de Usuarios</title></head>
+<body>
+    <h1>Lista de Usuarios (Total: {{ total }})</h1>
+    
+    <ul>
+        {% for u in usuarios %}
+        <li>
+            ID: {{ u.id }} - {{ u.nombre }} ({{ u.edad }} años)
+            <a href="{{ url_for('eliminar', id=u.id) }}">[Eliminar]</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

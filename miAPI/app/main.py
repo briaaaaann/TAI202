@@ -1,6 +1,7 @@
 from fastapi import FastAPI, status, HTTPException
 from typing import Optional 
 import asyncio
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
@@ -10,15 +11,26 @@ usuarios = [
     {"id": 3, "nombre": "Rodrigo", "edad": 20},
 ]
 
+#Modelo de validacion pydantic
+class crear_usuario(BaseModel):
+    id:int = Field(...,gt=0, description="Indentificador unico")
+    nombre:str = Field(...,min_length=3, max_length=50,example="Juanita")
+    edad:int = Field(...,ge=1,le=100,description="Edad valida entre 1 y 100")
+
 @app.get("/v1/usuarios/", tags=['HTTP CRUD'])
 async def leer_usuarios():
     return {"total": len(usuarios), "usuarios": usuarios}
 
 @app.post("/v1/usuarios/", tags=['HTTP CRUD'], status_code=status.HTTP_201_CREATED)
-async def agregar_usuarios(usuario: dict):
-    if any(usr["id"] == usuario.get("id") for usr in usuarios):
-        raise HTTPException(status_code=400, detail="El id ya existe")
-    
+async def crear_usuario(usuario:crear_usuario):
+    for usr in usuarios:
+        if usr["id"] == usuario.id:
+            raise HTTPException(
+                status_code=400,
+                detail="El id ya existe"
+            )
+    #if any(usr["id"] == usuario.get("id") for usr in usuarios):
+    #    raise HTTPException(status_code=400, detail="El id ya existe")
     usuarios.append(usuario)
     return {"mensaje": "Usuario Creado", "datos": usuario}
 
@@ -48,3 +60,5 @@ async def eliminar_usuario(usuario_id: int):
             usuario_eliminado = usuarios.pop(i)
             return {"mensaje": "Usuario eliminado", "usuario": usuario_eliminado}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+
