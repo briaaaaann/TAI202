@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    container_name: server_FastAPIJWT
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./app:/app/app
