@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    container_name: api_Adopcion
+    ports:
+      - "5005:5000"
+    volumes:
+      - ./app:/app/app
