@@ -1,9 +1,9 @@
 services:
   api:
     build: .
-    container_name: api_Freelance
+    container_name: api_Examen
     ports:
-      - "5006:5000"
+      - "5008:5000"
     volumes:
       - ./app:/app/app
 
