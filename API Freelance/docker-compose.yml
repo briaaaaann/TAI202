@@ -1,0 +1,10 @@
+services:
+  api:
+    build: .
+    container_name: api_Freelance
+    ports:
+      - "5006:5000"
+    volumes:
+      - ./app:/app/app
+
+# docker-compose up --build

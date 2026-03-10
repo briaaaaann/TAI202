@@ -1,6 +1,6 @@
 #IMPORTACIONES, LISTAS Y MODELOS
 from fastapi import FastAPI, status, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm # CORRECCIÓN AQUÍ
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm 
 import jwt
 from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel, Field
@@ -27,7 +27,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 #CONFIGURACION JWT
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") # CORRECCIÓN AQUÍ
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") 
 
 @app.post("/token", tags=['Seguridad'])
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
