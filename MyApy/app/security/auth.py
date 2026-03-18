@@ -14,3 +14,6 @@ def verificar_peticion(credenciales: HTTPBasicCredentials = Depends(seguridad)):
             detail = "Credenciales inválidas"
         )
     return credenciales.username
+
+
+

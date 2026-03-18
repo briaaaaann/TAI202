@@ -10,3 +10,5 @@ class CrearUsuario(BaseModel):
 class PatchUsuario(BaseModel):
     nombre: Optional[str] = Field(None, min_length=3, max_length=50, example="Juanita")
     edad: Optional[int] = Field(None, ge=1, le=123, description="Edad valida entre 1 y 123")
+    
+

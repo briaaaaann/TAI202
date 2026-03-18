@@ -6,3 +6,5 @@ app = FastAPI(
 )
 
 app.include_router(usuario.router)
+
+

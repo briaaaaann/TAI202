@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, status, HTTPException, Depends, APIRouter
 import asyncio
 from typing import Optional
@@ -55,3 +54,7 @@ async def eliminar_usuario(usuario_id: int, usuario_Auth: str = Depends(verifica
                      "eliminado_por": f"{usuario_Auth}"}
 
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+
+
+
