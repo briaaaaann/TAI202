@@ -11,7 +11,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://admin:123456@postgres:5434/DB_miapi
+      DATABASE_URL: postgresql://admin:123456@postgres:5432/DB_miapi
 
   postgres:
     image: postgres:15
